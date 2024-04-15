@@ -15,6 +15,15 @@ const filterOptions = [
   { value: "name", label: "Name (A-Z)" },
   { value: "job-amount", label: "Opened Position (High-Low)" },
   { value: "rating", label: "Rating (High-Low)" },
+  { value: "full-time", label: "Full-Time" },
+  { value: "part-time", label: "Part-Time" },
+  { value: "contract", label: "Contract" }
+];
+
+const jobTypeOptions = [
+  { value: "full-time", label: "Full-Time" },
+  { value: "part-time", label: "Part-Time" },
+  { value: "contract", label: "Contract" }
 ];
 
 export function Searchbar(props: FilterProps) {
@@ -22,15 +31,16 @@ export function Searchbar(props: FilterProps) {
   const [filteredBy, setFilteredBy] = useState("name");
 
   useEffect(() => {
-    console.log("filtering by", filteredBy);
-    const data = filter(props.data, filteredBy);
+    console.log("Filtering by", filteredBy);
+    console.log("Searching by", searchText);
+    const data = filter(props.data, filteredBy, searchText);
     props.setFilteredData(data);
   }, [filteredBy, props.data, searchText]);
 
   return (
     <div className={twMerge("flex flex-row justify-between", props.className)}>
       {/* search bar */}
-      <form className="w-full">
+      <div className="w-full">
         <label className="sr-only mb-2 text-sm font-medium text-black">
           Search
         </label>
@@ -58,7 +68,7 @@ export function Searchbar(props: FilterProps) {
             required
           />
         </div>
-      </form>
+      </div>
       {/* filter drop down */}
       <Popover className={"mx-2 mt-1"}>
         <Popover.Button className="rounded-lg bg-indigo-600 p-2 text-center text-white">
@@ -98,14 +108,39 @@ export function Searchbar(props: FilterProps) {
   );
 }
 
-function filter(data: JobData[], filter: string) {
-  if (filter === "name") {
-    return data.sort((a, b) => a.name.localeCompare(b.name));
+function filter(data: JobData[], filterBy: string, searchText: string) {
+  const jobTypePriority = {
+    "full-time": 1,
+    "part-time": 2,
+    "contract": 3
+  };
+
+  // Filter by search text
+  let filteredData = data.filter((item) => {
+    const searchLower = searchText.toLowerCase();
+    return (
+      item.name.toLowerCase().includes(searchLower) ||
+      (item.description?.toLowerCase().includes(searchLower) || false) ||
+      (item.industry?.toLowerCase().includes(searchLower) || false)
+    );
+  });
+
+  // Filter by job type if selected
+  if (filterBy === "full-time" || filterBy === "part-time" || filterBy === "contract") {
+    filteredData = filteredData.filter(jobData =>
+      jobData.jobListings.some(listing => listing.type.toLowerCase() === filterBy.toLowerCase())
+    );
   }
-  if (filter === "job-amount") {
-    return data.sort((a, b) => b.jobListings.length - a.jobListings.length);
+  console.log(filterBy,filteredData);
+  // Sort by name, job amount, or rating if those filters are selected
+  switch (filterBy) {
+    case "name":
+      return filteredData.sort((a, b) => a.name.localeCompare(b.name));
+    case "job-amount":
+      return filteredData.sort((a, b) => b.jobListings.length - a.jobListings.length);
+    case "rating":
+      return filteredData.sort((a, b) => (b.ratings ?? 0) - (a.ratings ?? 0));
+    default:
+      return filteredData; // Includes filtering by job type but no additional sort is necessary
   }
-  if (filter === "rating")
-    return data.sort((a, b) => (b.ratings ?? 0) - (a.ratings ?? 0));
-  return data;
 }

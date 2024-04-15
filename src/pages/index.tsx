@@ -7,21 +7,53 @@ import {
   ChatBubbleLeftIcon,
   ClipboardIcon,
 } from "@heroicons/react/24/outline";
+import { Searchbar } from "~/components/Job/filter";
+import { useEffect, useState } from "react";
+
+export type JobData = {
+  id: string;
+  name: string;
+  description: string | null;
+  industry: string | null;
+  ratings: number | null;
+  size: number | null;
+  jobListings: {
+    id: string;
+    title: string;
+    description: string;
+    requirements: string;
+    location: string;
+    type: string;
+    createdAt: Date;
+    updatedAt: Date;
+    expiresAt: Date;
+  }[];
+};
 
 export default function Home() {
   const { data, isLoading } = api.company.getAllCompaniesData.useQuery(); // Assuming isLoading is available
+  const [filterableData, setFilterableData] = useState<JobData[]>(data ?? []);
+
+  function SetNewFilteredData(data: JobData[]) {
+    setFilterableData([...data]);
+  }
 
   return (
     <Page>
       <div className="mx-5 max-w-screen-xl text-2xl 2xl:mx-auto">
         <div>
           <h1 className="my-5 pt-5 font-semibold">Company</h1>
+          <Searchbar
+            className="mb-4"
+            data={data ?? []}
+            setFilteredData={SetNewFilteredData}
+          />
           <ul
             role="list"
             className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
           >
-            {!isLoading && data
-              ? data.map((company) => (
+            {!isLoading && filterableData
+              ? filterableData.map((company) => (
                   <CompanyCard
                     key={company.id}
                     {...company}

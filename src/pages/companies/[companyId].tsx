@@ -164,8 +164,14 @@ export default function CompanyDetail() {
                     <dt className="text-sm font-medium text-gray-900">
                       Ratings
                     </dt>
-                    <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                      {data?.ratings}
+                    <dd className="mt-1 text-sm leading-6 text-yellow-700 sm:col-span-2 sm:mt-0">
+                      {Array.from({ length: data?.ratings }, (_, i) => (
+                        <span key={i}>&#9733;</span>
+                      ))}
+                      {Array.from({ length: 5 - data?.ratings }, (_, i) => (
+                        <span key={i}>&#9734;</span>
+                      ))}
+                      <span> ({data?.ratings} out of 5)</span>
                     </dd>
                   </div>
                 </dl>

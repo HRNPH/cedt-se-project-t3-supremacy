@@ -7,14 +7,9 @@ generator client {
 
 datasource db {
     provider = "postgresql"
-    // NOTE: When using mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-    // Further reading:
-    // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-    // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
     url      = env("DATABASE_URL")
 }
 
-// Necessary for Next auth
 model Account {
   id                String   @id @default(cuid())
   userId            String
@@ -29,7 +24,6 @@ model Account {
   id_token          String?  @db.Text
   session_state     String?
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
   @@unique([provider, providerAccountId])
 }
 
@@ -42,6 +36,7 @@ model Profile {
     telephone      String?
     user           User?
 }
+
 model User {
   id            String    @id @default(cuid())
   accounts      Account[]
@@ -49,34 +44,32 @@ model User {
   password      String?
   name          String?
   email         String?   @unique
-  profile              Profile              @relation(fields: [profileId], references: [id])
-  profileId            String               @unique
+  profile       Profile   @relation(fields: [profileId], references: [id])
+  profileId     String    @unique
   role          String?
   wishlists     Wishlist[]
 }
 
 model Wishlist {
   id            String      @id @default(cuid())
-  user          User        @relation(fields: [userId], references: [id]) // Reference to the user who owns this wishlist
-  userId        String      // Reference to the user
-  jobListings   JobListing[]  // An array of job listings in the wishlist
-
-  @@unique([userId, id]) // Ensure each user has only one wishlist
+  user          User        @relation(fields: [userId], references: [id])
+  userId        String
+  jobListings   JobListing[]
+  @@unique([userId, id])
 }
 
-
 model Company {
-  id          String      @id @default(cuid())
+  id          String        @id @default(cuid())
   name        String
-  description String?     @db.Text
+  description String?       @db.Text
   industry    String?
   address     String?
   website     String?
   telephone   String?
   size        Int?
   jobListings JobListing[]
+  ratings     Int?
 }
-
 
 model JobListing {
   id            String        @id @default(cuid())
@@ -92,22 +85,17 @@ model JobListing {
   company       Company       @relation(fields: [companyId], references: [id])
   applications  Application[]
   wishlists     Wishlist[]
-
   @@index([companyId])
 }
 
-
 model Application {
-  id           String   @id @default(cuid())
+  id           String       @id @default(cuid())
   userId       String
   jobListingId String 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
   reservedAt   String
-  user         User     @relation(fields: [userId], references: [id])
-  jobListing   JobListing @relation(fields: [jobListingId], references: [id])
-
+  user         User         @relation(fields: [userId], references: [id])
+  jobListing   JobListing   @relation(fields: [jobListingId], references: [id])
   @@index([userId, jobListingId])
 }
-
-

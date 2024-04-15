@@ -52,7 +52,18 @@ model User {
   profile              Profile              @relation(fields: [profileId], references: [id])
   profileId            String               @unique
   role          String?
+  wishlists     Wishlist[]
 }
+
+model Wishlist {
+  id            String      @id @default(cuid())
+  user          User        @relation(fields: [userId], references: [id]) // Reference to the user who owns this wishlist
+  userId        String      // Reference to the user
+  jobListings   JobListing[]  // An array of job listings in the wishlist
+
+  @@unique([userId, id]) // Ensure each user has only one wishlist
+}
+
 
 model Company {
   id          String      @id @default(cuid())
@@ -74,12 +85,13 @@ model JobListing {
   description   String        @db.Text
   requirements  String        @db.Text
   location      String
-  type          String         
+  type          String
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   expiresAt     DateTime
   company       Company       @relation(fields: [companyId], references: [id])
-  applications  Application[] 
+  applications  Application[]
+  wishlists     Wishlist[]
 
   @@index([companyId])
 }

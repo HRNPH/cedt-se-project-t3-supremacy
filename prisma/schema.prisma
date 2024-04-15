@@ -48,7 +48,6 @@ model User {
   profileId     String    @unique
   role          String?
   wishlists     Wishlist[]
-  ratings       CompanyRating[]
 }
 
 model Wishlist {
@@ -69,7 +68,7 @@ model Company {
   telephone   String?
   size        Int?
   jobListings JobListing[]
-  ratings     CompanyRating[]
+  ratings     Int?
 }
 
 model JobListing {
@@ -99,15 +98,4 @@ model Application {
   user         User         @relation(fields: [userId], references: [id])
   jobListing   JobListing   @relation(fields: [jobListingId], references: [id])
   @@index([userId, jobListingId])
-}
-
-model CompanyRating {
-  id          String    @id @default(cuid())
-  companyId   String
-  userId      String
-  rating      Int
-  createdAt   DateTime  @default(now())
-  user        User      @relation(fields: [userId], references: [id])
-  company     Company   @relation(fields: [companyId], references: [id])
-  @@unique([companyId, userId])
 }

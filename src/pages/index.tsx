@@ -95,7 +95,7 @@ export default function Home() {
             first job, a career change, or the chance to network with top
             companies, we have something for everyone.
           </p>
-          <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
+          <dl className="grid max-w-xl mt-5 grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
             {features.map((feature) => (
               <div key={feature.name} className="flex flex-col">
                 <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">

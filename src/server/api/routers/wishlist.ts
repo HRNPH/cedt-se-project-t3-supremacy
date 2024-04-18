@@ -1,45 +1,23 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
-export const applicationRouter = createTRPCRouter({
+export const wishlistRouter = createTRPCRouter({
   createWihlist: protectedProcedure
     .input(
       z.object({
         userId: z.string(),
         jobListingId: z.string(),
-        reservedAt: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const newApplication = await ctx.db.application.create({
+      const newWishlist = await ctx.db.application.create({
         data: {
           userId: input.userId,
           jobListingId: input.jobListingId,
-          reservedAt: input.reservedAt,
         },
       });
 
-      return newApplication;
-    }),
-
-  updateWishlistReservedAt: protectedProcedure
-    .input(
-      z.object({
-        applicationId: z.string(),
-        newReservedAt: z.string(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const updatedApplication = await ctx.db.application.update({
-        where: { id: input.applicationId },
-        data: { reservedAt: input.newReservedAt },
-      });
-
-      if (!updatedApplication) {
-        throw new Error(`Application with ID ${input.applicationId} not found`);
-      }
-
-      return updatedApplication;
+      return newWishlist;
     }),
 
   getWishlistForJobListing: protectedProcedure
@@ -54,7 +32,7 @@ export const applicationRouter = createTRPCRouter({
       });
 
       if (applications.length === 0) {
-        throw new Error(`No applications found for job listing ID ${input}`);
+        throw new Error(`No wishlist found for job listing ID ${input}`);
       }
 
       return applications;

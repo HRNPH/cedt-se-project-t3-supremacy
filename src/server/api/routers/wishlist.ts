@@ -10,7 +10,7 @@ export const wishlistRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const newWishlist = await ctx.db.application.create({
+      const newWishlist = await ctx.db.wishlist.create({
         data: {
           userId: input.userId,
           jobListingId: input.jobListingId,
@@ -23,14 +23,13 @@ export const wishlistRouter = createTRPCRouter({
   getWishlistForJobListing: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      const applications = await ctx.db.application.findMany({
+      const applications = await ctx.db.wishlist.findMany({
         where: { jobListingId: input },
         include: {
           user: true,
           jobListing: true,
         },
       });
-      xw;
       if (applications.length === 0) {
         throw new Error(`No wishlist found for job listing ID ${input}`);
       }
@@ -41,7 +40,7 @@ export const wishlistRouter = createTRPCRouter({
   getWishlistForUser: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input }) => {
-      const applications = await ctx.db.application.findMany({
+      const applications = await ctx.db.wishlist.findMany({
         where: { userId: input },
         select: {
           id: true,
@@ -61,22 +60,22 @@ export const wishlistRouter = createTRPCRouter({
   deleteWishlist: protectedProcedure
     .input(
       z.object({
-        applicationId: z.string(),
+        wishlistId: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const deletedApplication = await ctx.db.application.delete({
-        where: { id: input.applicationId },
+      const deletedApplication = await ctx.db.wishlist.delete({
+        where: { id: input.wishlistId },
       });
 
       if (!deletedApplication) {
-        throw new Error(`Application with ID ${input.applicationId} not found`);
+        throw new Error(`Application with ID ${input.wishlistId} not found`);
       }
 
       return { success: true, message: "Application deleted successfully." };
     }),
   getAllWishlist: protectedProcedure.query(async ({ ctx }) => {
-    const applications = await ctx.db.application.findMany({
+    const applications = await ctx.db.wishlist.findMany({
       include: {
         user: true,
         jobListing: true,

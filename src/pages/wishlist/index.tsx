@@ -9,35 +9,30 @@ import { toast } from "sonner";
 
 export default function Wishlist() {
   const sessionId = useSession().data?.user.id ?? "NO_OP";
-  const { data: applications } =
+  const { data: wishlist } =
     api.wishlist.getWishlistForUser.useQuery(sessionId);
-  const { data: adminapplications } = api.wishlist.getAllWishlist.useQuery();
+  const { data: adminwishlist } = api.wishlist.getAllWishlist.useQuery();
   const { data } = api.user.getUserById.useQuery(sessionId);
-  const wishlistData: Application[] = wishlist ?? [];
-  const wishlistDataAdmin: Application[] = adminwishlist ?? [];
+  const wishlistData = wishlist ?? [];
+  const wishlistDataAdmin = adminwishlist ?? [];
   const [open, setOpen] = useState(false);
   const [openedit, setOpenedit] = useState(false);
   const cancelButtonRef = useRef(null);
-  const [applicationId, setapplicationId] = useState("");
+  const [wishlistId, setwishlistId] = useState("");
   const {
-    mutate: deleteApplication,
+    mutate: deleteWishlist,
     isSuccess,
     isError,
-  } = api.application.deleteApplication.useMutation();
+  } = api.wishlist.deleteWishlist.useMutation();
 
-  const handleClickDelete = (applicationId: SetStateAction<string>) => () => {
-    setapplicationId(applicationId);
+  const handleClickDelete = (wishlistId: SetStateAction<string>) => () => {
+    setwishlistId(wishlistId);
     setOpen(true);
   };
 
-  const handleClickEdit = (applicationId: SetStateAction<string>) => () => {
-    setapplicationId(applicationId);
-    setOpenedit(true);
-  };
-
   const handleDelete = () => {
-    deleteApplication(
-      { applicationId },
+    deleteWishlist(
+      { wishlistId },
       {
         onSuccess: () => {
           setOpen(false);
@@ -58,12 +53,12 @@ export default function Wishlist() {
             <div className="overflow-hidden bg-white shadow sm:rounded-lg">
               <div className="broder-gray-50 border-b px-4 py-6 sm:px-6">
                 <h3 className="text-xl font-semibold leading-7 text-gray-900">
-                  Booking
+                  Wishlist
                 </h3>
                 <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
-                  Here is your booking. You have the option to edit or delete
-                  it. Feel free to make any changes before being selected for an
-                  interview!
+                  Here is your wishlist for the booking. You have the option to
+                  edit or delete it. Please feel free to make any changes before
+                  being selected for an interview!
                 </p>
               </div>
               {data?.role === "admin" ? (
@@ -89,12 +84,6 @@ export default function Wishlist() {
                         </p>
                       </div>
                       <div className="text-sm">
-                        <button
-                          className="mt-5 rounded-md bg-gray-200 p-1 px-6 font-semibold text-black hover:bg-gray-300"
-                          onClick={handleClickEdit(job.id)}
-                        >
-                          Edit
-                        </button>
                         <button
                           className="ml-2 mt-5 rounded-md bg-red-600 p-1 px-6 font-semibold text-white hover:bg-red-700"
                           onClick={handleClickDelete(job.id)}
@@ -123,17 +112,8 @@ export default function Wishlist() {
                         <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">
                           {job.jobListing.description}
                         </p>
-                        <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">
-                          {job.reservedAt}
-                        </p>
                       </div>
                       <div className="text-sm">
-                        <button
-                          className="mt-5 rounded-md bg-gray-200 p-1 px-6 font-semibold text-black hover:bg-gray-300"
-                          onClick={handleClickEdit(job.id)}
-                        >
-                          Edit
-                        </button>
                         <button
                           className="ml-2 mt-5 rounded-md bg-red-600 p-1 px-6 font-semibold text-white hover:bg-red-700"
                           onClick={handleClickDelete(job.id)}

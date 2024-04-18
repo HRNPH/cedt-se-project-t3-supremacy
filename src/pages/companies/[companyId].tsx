@@ -218,12 +218,20 @@ export default function CompanyDetail() {
                       {job.description}
                     </p>
                   </div>
-                  <button
-                    className="mt-5 rounded-lg bg-indigo-500 p-1 px-6 font-semibold text-white hover:bg-indigo-600"
-                    onClick={handleClickInterview(job.id)}
-                  >
-                    Schedule Interview
-                  </button>
+                  <div className="flex flex-row text-sm">
+                    <button
+                      className="mt-5 rounded-lg bg-indigo-500 p-1 px-6 font-semibold text-white hover:bg-indigo-600"
+                      onClick={handleClickInterview(job.id)}
+                    >
+                      Schedule Interview
+                    </button>
+                    <button
+                      className="mt-5 rounded-lg bg-gray-500 p-1 px-6 font-semibold text-white hover:bg-gray-600 ml-2"
+                      onClick={handleClickInterview(job.id)}
+                    >
+                      Add to Wishlist
+                    </button>
+                  </div>
                 </article>
               ))}
             </div>

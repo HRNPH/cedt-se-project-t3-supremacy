@@ -69,7 +69,7 @@ export default function Navbar() {
                     Home
                   </Link>
                   <Link
-                    href="/booking"
+                    href="/wishlist"
                     className="inline-flex items-center border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
                   >
                     Wishlist
@@ -166,7 +166,7 @@ export default function Navbar() {
               </Disclosure.Button>
               <Disclosure.Button
                 as="a"
-                href="/booking"
+                href="/wishlist"
                 className="block border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700"
               >
                 Wishlist

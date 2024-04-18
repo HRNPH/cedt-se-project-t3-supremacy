@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const wishlistRouter = createTRPCRouter({
-  createWihlist: protectedProcedure
+  createWishlist: protectedProcedure
     .input(
       z.object({
         userId: z.string(),

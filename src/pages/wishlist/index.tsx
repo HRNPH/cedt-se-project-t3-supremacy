@@ -79,9 +79,6 @@ export default function Wishlist() {
                         <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">
                           {job.jobListing.description}
                         </p>
-                        <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">
-                          {job.reservedAt}
-                        </p>
                       </div>
                       <div className="text-sm">
                         <button

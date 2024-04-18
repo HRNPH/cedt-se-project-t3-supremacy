@@ -39,9 +39,32 @@ export default function CompanyDetail() {
   const [open, setOpen] = useState(false);
   const [jobId, setJobId] = useState("");
   const { mutate } = api.application.createApplication.useMutation();
+  const { mutate: mutateWishlist } = api.wishlist.createWishlist.useMutation();
+
   const handleClickInterview = (jobId: SetStateAction<string>) => () => {
     setJobId(jobId);
     setOpen(true);
+  };
+
+  const handleMutateClickWishlist = (jobId: string) => {
+    mutateWishlist(
+      {
+        userId: sessionId,
+        jobListingId: jobId,
+      },
+      {
+        onSuccess: () => {
+          toast.error(
+            "Scuccessfully added the job to your wishlist. You can view it in your Wishlist.",
+          );
+        },
+        onError: () => {
+          toast.error(
+            "Failed to add the job to your wishlist. Please try again",
+          );
+        },
+      },
+    );
   };
 
   const handleConfirmInterview = () => {
@@ -165,7 +188,7 @@ export default function CompanyDetail() {
                       Ratings
                     </dt>
                     <dd className="mt-1 text-sm leading-6 text-yellow-700 sm:col-span-2 sm:mt-0">
-                      {data?.ratings || data?.ratings === 0 ? (
+                      {data?.ratings ?? data?.ratings === 0 ? (
                         <>
                           {Array.from({ length: data.ratings }, (_, i) => (
                             <span key={i}>&#9733;</span>
@@ -221,13 +244,13 @@ export default function CompanyDetail() {
                   <div className="flex flex-row text-sm">
                     <button
                       className="mt-5 rounded-lg bg-indigo-500 p-1 px-6 font-semibold text-white hover:bg-indigo-600"
-                      onClick={handleClickInterview(job.id)}
+                      onClick={() => handleClickInterview(job.id)}
                     >
                       Schedule Interview
                     </button>
                     <button
-                      className="mt-5 rounded-lg bg-gray-500 p-1 px-6 font-semibold text-white hover:bg-gray-600 ml-2"
-                      onClick={handleClickInterview(job.id)}
+                      className="ml-2 mt-5 rounded-lg bg-gray-500 p-1 px-6 font-semibold text-white hover:bg-gray-600"
+                      onClick={() => handleMutateClickWishlist(job.id)}
                     >
                       Add to Wishlist
                     </button>

@@ -4,7 +4,7 @@ import Page from "./layout/page";
 export default function Notfound() {
   return (
     <Page>
-      <div className="mt-32 text-center">
+      <div className="mt-40 text-center">
         <p className="text-base font-semibold text-indigo-600">404</p>
         <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
           Page not found

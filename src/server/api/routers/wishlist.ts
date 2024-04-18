@@ -30,7 +30,7 @@ export const wishlistRouter = createTRPCRouter({
           jobListing: true,
         },
       });
-
+      xw;
       if (applications.length === 0) {
         throw new Error(`No wishlist found for job listing ID ${input}`);
       }

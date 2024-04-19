@@ -40,6 +40,8 @@ export default function CompanyDetail() {
   const [jobId, setJobId] = useState("");
   const { mutate } = api.application.createApplication.useMutation();
   const { mutate: mutateWishlist } = api.wishlist.createWishlist.useMutation();
+  const { data: wishlist } =
+    api.wishlist.getWishlistForUser.useQuery(sessionId);
 
   const handleClickInterview = (jobId: SetStateAction<string>) => () => {
     setJobId(jobId);
@@ -47,6 +49,19 @@ export default function CompanyDetail() {
   };
 
   const handleMutateClickWishlist = (jobId: string) => {
+    const wishlistsData = wishlist ?? [];
+
+    if (wishlistsData) {
+      const hasAppliedForThisJob = wishlistsData.some(
+        (app) => app.jobListing.id === jobId,
+      );
+      if (hasAppliedForThisJob) {
+        toast.error(
+          "You have already added this job to your wishlist. If you wish to remove it, please go to your Wishlist and remove",
+        );
+        return;
+      }
+    }
     mutateWishlist(
       {
         userId: sessionId,
@@ -54,8 +69,9 @@ export default function CompanyDetail() {
       },
       {
         onSuccess: () => {
-          toast.error(
-            "Scuccessfully added the job to your wishlist. You can view it in your Wishlist.",
+          window.parent.location = window.parent.location.href;
+          toast.success(
+            "Successfully added the job to your wishlist. You can view it in your wishlist.",
           );
         },
         onError: () => {

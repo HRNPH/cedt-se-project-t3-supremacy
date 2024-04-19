@@ -1,9 +1,19 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type ChangeEvent } from "react";
 import { twMerge } from "tailwind-merge";
 import { Popover } from "@headlessui/react";
 import { BsFillFilterSquareFill } from "react-icons/bs";
 
-function hasDataChanged(oldData, newData) {
+interface IData {
+  name: string;
+  description?: string;
+  industry?: string;
+  jobListings?: {
+    type: string;
+  }[];
+  ratings?: number;
+}
+
+function hasDataChanged(oldData: IData[], newData: IData[]): boolean {
   if (oldData.length !== newData.length) return true;
 
   for (let i = 0; i < oldData.length; i++) {
@@ -18,10 +28,20 @@ function hasDataChanged(oldData, newData) {
   return false;
 }
 
-export function Searchbar({ className, data, setFilteredData }) {
-  const [searchText, setSearchText] = useState("");
-  const [selectedFilters, setSelectedFilters] = useState([]);
-  const prevDataRef = useRef(data);
+interface SearchbarProps {
+  className?: string;
+  data: IData[];
+  setFilteredData: (data: IData[]) => void;
+}
+
+export function Searchbar({
+  className,
+  data,
+  setFilteredData,
+}: SearchbarProps) {
+  const [searchText, setSearchText] = useState<string>("");
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const prevDataRef = useRef<IData[]>(data);
 
   useEffect(() => {
     if (hasDataChanged(prevDataRef.current, data)) {
@@ -52,7 +72,9 @@ export function Searchbar({ className, data, setFilteredData }) {
           </div>
           <input
             type="search"
-            onChange={(e) => setSearchText(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setSearchText(e.target.value)
+            }
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-3 pl-10 text-sm text-black focus:border-blue-500 focus:ring-blue-500"
             placeholder="Search Mockups, Logos..."
             required
@@ -73,7 +95,7 @@ export function Searchbar({ className, data, setFilteredData }) {
                   type="checkbox"
                   value={option.value}
                   checked={selectedFilters.includes(option.value)}
-                  onChange={(e) => {
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
                     const newFilters = e.target.checked
                       ? [...selectedFilters, option.value]
                       : selectedFilters.filter((f) => f !== option.value);
@@ -90,22 +112,24 @@ export function Searchbar({ className, data, setFilteredData }) {
   );
 }
 
-function filter(data, selectedFilters, searchText) {
+function filter(
+  data: IData[],
+  selectedFilters: string[],
+  searchText: string,
+): IData[] {
   let filteredData = data.filter((item) => {
     const searchLower = searchText.toLowerCase();
     return (
-      item.name.toLowerCase().includes(searchLower) ||
-      item.description?.toLowerCase().includes(searchLower) ||
-      false ||
-      item.industry?.toLowerCase().includes(searchLower) ||
-      false
+      (item.name.toLowerCase().includes(searchLower) ||
+        item.description?.toLowerCase().includes(searchLower)) ??
+      item.industry?.toLowerCase().includes(searchLower)
     );
   });
 
   selectedFilters.forEach((filterBy) => {
     if (["full-time", "part-time", "contract"].includes(filterBy)) {
       filteredData = filteredData.filter((jobData) =>
-        jobData.jobListings.some(
+        jobData.jobListings?.some(
           (listing) => listing.type.toLowerCase() === filterBy,
         ),
       );
@@ -116,7 +140,8 @@ function filter(data, selectedFilters, searchText) {
           break;
         case "job-amount":
           filteredData.sort(
-            (a, b) => b.jobListings.length - a.jobListings.length,
+            (a, b) =>
+              (b.jobListings?.length ?? 0) - (a.jobListings?.length ?? 0),
           );
           break;
         case "rating":

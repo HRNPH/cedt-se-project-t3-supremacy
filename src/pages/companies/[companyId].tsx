@@ -244,7 +244,7 @@ export default function CompanyDetail() {
                   <div className="flex flex-row text-sm">
                     <button
                       className="mt-5 rounded-lg bg-indigo-500 p-1 px-6 font-semibold text-white hover:bg-indigo-600"
-                      onClick={() => handleClickInterview(job.id)}
+                      onClick={handleClickInterview(job.id)}
                     >
                       Schedule Interview
                     </button>

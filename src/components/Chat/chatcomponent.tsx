@@ -12,7 +12,7 @@ function ChatComponent() {
 
   useEffect(() => {
     if ("Notification" in window && Notification.permission !== "granted") {
-      Notification.requestPermission();
+      void Notification.requestPermission();
     }
   }, []);
 

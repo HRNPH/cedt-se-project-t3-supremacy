@@ -5,11 +5,11 @@ import Navbar from "./Nav";
 import SignupBanner from "./Nav/Banner/Signup";
 import ChatComponent from "~/components/Chat/chatcomponent";
 import Draggable from "react-draggable";
+
 interface PageProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode;
   parentClassName?: string;
   upperClassName?: string;
-  circleBlur?: boolean;
   noMargin?: boolean;
 }
 
@@ -38,21 +38,23 @@ export default function Page({
         )}
       >
         <header className="sticky top-0 z-50 overscroll-none">
-          {status == "unauthenticated" && <SignupBanner />}
+          {status === "unauthenticated" && <SignupBanner />}
           <Navbar />
         </header>
         <main className={twMerge("h-full", className)} {...props}>
           {children}
         </main>
       </div>
-      <Draggable>
-        <div className="absolute bottom-0 right-0 z-50 m-4 w-96">
-          <div className="rounded-md bg-indigo-500 p-3 text-center font-semibold text-white">
-            Drage Here
+      {status === "authenticated" && (
+        <Draggable>
+          <div className="absolute bottom-0 right-0 z-50 m-4 w-96">
+            <div className="rounded-md bg-indigo-500 p-3 text-center font-semibold text-white">
+              Drag Here
+            </div>
+            <ChatComponent />
           </div>
-          <ChatComponent />
-        </div>
-      </Draggable>
+        </Draggable>
+      )}
       <footer>
         <Footer />
       </footer>

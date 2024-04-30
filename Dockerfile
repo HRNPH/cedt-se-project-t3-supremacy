@@ -30,7 +30,7 @@ ADD package-lock.json ./
 ADD pnpm-lock.yaml ./
 
 # ENV NEXT_TELEMETRY_DISABLED 1
-
+ENV COREPACK_ENABLE_STRICT=0
 RUN \
     if [ -f pnpm-lock.yaml ]; then npm i -g pnpm && SKIP_ENV_VALIDATION=1 pnpm build; \
     elif [ -f package-lock.json ]; then SKIP_ENV_VALIDATION=1 npm run build; \

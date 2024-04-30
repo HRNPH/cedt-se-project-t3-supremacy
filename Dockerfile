@@ -11,10 +11,10 @@ COPY prisma ./
 
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml\* ./
 
+ENV COREPACK_ENABLE_STRICT=0
 RUN \
-    if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+    if [ -f pnpm-lock.yaml ]; then npm i -g pnpm && pnpm install; \
     elif [ -f package-lock.json ]; then npm ci; \
-    elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i; \
     else echo "Lockfile not found." && exit 1; \
     fi
 
@@ -26,13 +26,14 @@ ARG NEXT_PUBLIC_CLIENTVAR
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+ADD package-lock.json ./
+ADD pnpm-lock.yaml ./
 
 # ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN \
-    if [ -f yarn.lock ]; then SKIP_ENV_VALIDATION=1 yarn build; \
+    if [ -f pnpm-lock.yaml ]; then npm i -g pnpm && SKIP_ENV_VALIDATION=1 pnpm build; \
     elif [ -f package-lock.json ]; then SKIP_ENV_VALIDATION=1 npm run build; \
-    elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && SKIP_ENV_VALIDATION=1 pnpm run build; \
     else echo "Lockfile not found." && exit 1; \
     fi
 

@@ -3,8 +3,8 @@ describe("Job Offer Interview Rating Display Functionality", () => {
     cy.visit("/");
     cy.get("[data-cy=card-skeleton]", { timeout: 10000 }).should("not.exist");
     cy.get(".right-0 > div > .text-black").click();
-    cy.get(":nth-child(1) > .flex > .w-full").type("apiphoom23@gmail.com");
-    cy.get(".max-w-lg > :nth-child(2) > .flex > .w-full").type("123");
+    cy.get("[name=emailAddress]").type("apiphoom23@gmail.com");
+    cy.get("[name=password]").type("123");
     cy.get(".select-none").click();
   });
 

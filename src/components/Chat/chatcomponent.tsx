@@ -9,11 +9,16 @@ function ChatComponent() {
   const userId =
     data?.role === "admin" ? "sample_user_alice" : "sample_user_sebastian";
   const lastNotificationRef = useRef(null);
+  const notificationSoundRef = useRef(null);
 
   useEffect(() => {
     if ("Notification" in window && Notification.permission !== "granted") {
       void Notification.requestPermission();
     }
+  }, []);
+
+  useEffect(() => {
+    notificationSoundRef.current = new Audio("/noti.mp3");
   }, []);
 
   const handleMessageReceived = (message) => {
@@ -24,17 +29,21 @@ function ChatComponent() {
             body: message.body,
             icon: message.sender.photoUrl,
           });
-
           notification.onclick = () => {
             window.focus();
             notification.close();
           };
-
           lastNotificationRef.current = message.id;
+
+          // Play the notification sound
+          if (notificationSoundRef.current) {
+            notificationSoundRef.current.play();
+          }
         }
       }
     }
   };
+
   return (
     <Session appId="tKpCN1ok" userId={userId} onMessage={handleMessageReceived}>
       <Chatbox

@@ -47,7 +47,7 @@ export default function Page({
       </div>
       <Draggable>
         <div className="absolute bottom-0 right-0 z-50 m-4 w-96">
-          <div className="rounded-md bg-indigo-500 p-3 font-semibold text-white">
+          <div className="rounded-md bg-indigo-500 p-3 text-center font-semibold text-white">
             Drage Here
           </div>
           <ChatComponent />

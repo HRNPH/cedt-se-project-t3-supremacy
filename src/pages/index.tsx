@@ -68,6 +68,7 @@ export default function Home() {
           setFilteredData={SetNewFilteredData}
         />
         <ul
+          data-cy="job-offer-list"
           role="list"
           className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
@@ -91,11 +92,11 @@ export default function Home() {
           </h2>
           <p className="mt-6 text-lg leading-8 text-gray-600">
             Join us at the leading job fair event to connect, discover, and
-            secure your next career opportunity. Whether you&apos;re looking for your
-            first job, a career change, or the chance to network with top
+            secure your next career opportunity. Whether you&apos;re looking for
+            your first job, a career change, or the chance to network with top
             companies, we have something for everyone.
           </p>
-          <dl className="grid max-w-xl mt-5 grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
+          <dl className="mt-5 grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
             {features.map((feature) => (
               <div key={feature.name} className="flex flex-col">
                 <div className="mb-6 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600">

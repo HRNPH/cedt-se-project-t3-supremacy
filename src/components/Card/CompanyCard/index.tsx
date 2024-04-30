@@ -15,7 +15,10 @@ const CompanyCard: FC<CompanyCardProps> = ({ id, name, description }) => {
         <div className="flex w-full items-center justify-between space-x-6 p-6">
           <div className="flex-1 truncate">
             <div className="flex items-center space-x-3">
-              <h3 className="truncate text-sm font-medium text-gray-900">
+              <h3
+                data-cy="company-name"
+                className="truncate text-sm font-medium text-gray-900"
+              >
                 {name}
               </h3>
             </div>

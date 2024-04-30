@@ -28,7 +28,6 @@ function hasDataChanged(oldData, newData) {
   return false;
 }
 
-
 export function Searchbar({ className, data, setFilteredData }) {
   const [searchText, setSearchText] = useState("");
   const [selectedFilters, setSelectedFilters] = useState([]);
@@ -68,14 +67,20 @@ export function Searchbar({ className, data, setFilteredData }) {
       </div>
 
       <Popover className="mx-2 mt-1">
-        <Popover.Button className="flex items-center justify-center rounded-lg bg-indigo-600 px-2 py-2 text-white">
+        <Popover.Button
+          data-cy="sort-dropdown"
+          className="flex items-center justify-center rounded-lg bg-indigo-600 px-2 py-2 text-white"
+        >
           <BsFillFilterSquareFill className="inline" />
           <span className="ml-3 text-sm font-semibold">Filter</span>
         </Popover.Button>
         <Popover.Panel className="absolute z-10 rounded-lg bg-white p-4 text-base font-semibold shadow-lg">
           {filterOptions.map((option) => (
             <div key={option.value}>
-              <label className="flex items-center space-x-3">
+              <label
+                data-cy={option.value}
+                className="flex items-center space-x-3"
+              >
                 <input
                   type="checkbox"
                   value={option.value}

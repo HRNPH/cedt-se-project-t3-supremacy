@@ -6,13 +6,13 @@ import { Fragment, SetStateAction, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { toast } from "sonner";
-
+import CompanyDetailSkeleton from "~/components/Card/CompanyDetailCard/CompanyDetailSkeleton";
 export default function Wishlist() {
   const sessionId = useSession().data?.user.id ?? "NO_OP";
   const { data: wishlist } =
     api.wishlist.getWishlistForUser.useQuery(sessionId);
   const { data: adminwishlist } = api.wishlist.getAllWishlist.useQuery();
-  const { data } = api.user.getUserById.useQuery(sessionId);
+  const { data, isLoading } = api.user.getUserById.useQuery(sessionId);
   const wishlistData = wishlist ?? [];
   const wishlistDataAdmin = adminwishlist ?? [];
   const [open, setOpen] = useState(false);
@@ -48,83 +48,89 @@ export default function Wishlist() {
   return (
     <div className="bg-gray-50">
       <Page>
-        <div className="mx-5 max-w-screen-xl text-2xl xl:mx-auto">
-          <div className="mx-auto mt-10">
-            <div className="overflow-hidden bg-white shadow sm:rounded-lg">
-              <div className="broder-gray-50 border-b px-4 py-6 sm:px-6">
-                <h3 className="text-xl font-semibold leading-7 text-gray-900">
-                  Wishlist
-                </h3>
-                <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
-                  Here is your wishlist for the booking. You have the option to
-                  edit or delete it. Please feel free to make any changes before
-                  being selected for an interview!
-                </p>
+        {!isLoading && data ? (
+          <div className="mx-5 max-w-screen-xl text-2xl xl:mx-auto">
+            <div className="mx-auto mt-10">
+              <div className="overflow-hidden bg-white shadow sm:rounded-lg">
+                <div className="broder-gray-50 border-b px-4 py-6 sm:px-6">
+                  <h3 className="text-xl font-semibold leading-7 text-gray-900">
+                    Wishlist
+                  </h3>
+                  <p className="mt-1 max-w-2xl text-sm leading-6 text-gray-500">
+                    Here is your wishlist for the booking. You have the option
+                    to edit or delete it. Please feel free to make any changes
+                    before being selected for an interview!
+                  </p>
+                </div>
+                {data?.role === "admin" ? (
+                  <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 p-10 pt-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+                    {wishlistDataAdmin?.map((job) => (
+                      <article
+                        key={job.id}
+                        className="flex max-w-xl flex-col items-start justify-between"
+                      >
+                        <div className="flex items-center gap-x-4 rounded-full bg-gray-100 p-1 px-3 text-xs">
+                          {job.jobListing.type}
+                        </div>
+                        <div className="group relative">
+                          <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
+                            <span className="absolute inset-0" />
+                            {job.jobListing.title}
+                          </h3>
+                          <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">
+                            {job.jobListing.description}
+                          </p>
+                        </div>
+                        <div className="text-sm">
+                          <button
+                            className="ml-2 mt-5 rounded-md bg-red-600 p-1 px-6 font-semibold text-white hover:bg-red-700"
+                            onClick={handleClickDelete(job.id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 p-10 pt-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
+                    {wishlistData?.map((job) => (
+                      <article
+                        key={job.id}
+                        className="flex max-w-xl flex-col items-start justify-between"
+                      >
+                        <div className="flex items-center gap-x-4 rounded-full bg-gray-100 p-1 px-3 text-xs">
+                          {job.jobListing.type}
+                        </div>
+                        <div className="group relative">
+                          <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
+                            <span className="absolute inset-0" />
+                            {job.jobListing.title}
+                          </h3>
+                          <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">
+                            {job.jobListing.description}
+                          </p>
+                        </div>
+                        <div className="text-sm">
+                          <button
+                            className="ml-2 mt-5 rounded-md bg-red-600 p-1 px-6 font-semibold text-white hover:bg-red-700"
+                            onClick={handleClickDelete(job.id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                )}
               </div>
-              {data?.role === "admin" ? (
-                <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 p-10 pt-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-                  {wishlistDataAdmin?.map((job) => (
-                    <article
-                      key={job.id}
-                      className="flex max-w-xl flex-col items-start justify-between"
-                    >
-                      <div className="flex items-center gap-x-4 rounded-full bg-gray-100 p-1 px-3 text-xs">
-                        {job.jobListing.type}
-                      </div>
-                      <div className="group relative">
-                        <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
-                          <span className="absolute inset-0" />
-                          {job.jobListing.title}
-                        </h3>
-                        <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">
-                          {job.jobListing.description}
-                        </p>
-                      </div>
-                      <div className="text-sm">
-                        <button
-                          className="ml-2 mt-5 rounded-md bg-red-600 p-1 px-6 font-semibold text-white hover:bg-red-700"
-                          onClick={handleClickDelete(job.id)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              ) : (
-                <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 p-10 pt-8 lg:mx-0 lg:max-w-none lg:grid-cols-3">
-                  {wishlistData?.map((job) => (
-                    <article
-                      key={job.id}
-                      className="flex max-w-xl flex-col items-start justify-between"
-                    >
-                      <div className="flex items-center gap-x-4 rounded-full bg-gray-100 p-1 px-3 text-xs">
-                        {job.jobListing.type}
-                      </div>
-                      <div className="group relative">
-                        <h3 className="mt-3 text-lg font-semibold leading-6 text-gray-900 group-hover:text-gray-600">
-                          <span className="absolute inset-0" />
-                          {job.jobListing.title}
-                        </h3>
-                        <p className="mt-5 line-clamp-3 text-sm leading-6 text-gray-600">
-                          {job.jobListing.description}
-                        </p>
-                      </div>
-                      <div className="text-sm">
-                        <button
-                          className="ml-2 mt-5 rounded-md bg-red-600 p-1 px-6 font-semibold text-white hover:bg-red-700"
-                          onClick={handleClickDelete(job.id)}
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              )}
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="w-full">
+            <CompanyDetailSkeleton />
+          </div>
+        )}
       </Page>
       <Transition.Root show={open} as={Fragment}>
         <Dialog

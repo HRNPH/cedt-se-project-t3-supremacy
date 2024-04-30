@@ -1,6 +1,9 @@
 const CompanyCardSkeleton = () => {
   return (
-    <li className="col-span-1 rounded-lg bg-white shadow">
+    <li
+      data-cy="card-skeleton"
+      className="col-span-1 rounded-lg bg-white shadow"
+    >
       <div className="flex w-full animate-pulse items-center space-x-6 p-6">
         <div className="flex-1 space-y-6 py-1">
           <div className="h-2 rounded bg-gray-200"></div> {/* For the name */}

@@ -1,6 +1,6 @@
 const CompanyDetailSkeleton = () => {
   return (
-    <div className="mx-auto max-w-7xl w-screen">
+    <div data-cy="card-skeleton" className="mx-auto w-screen max-w-7xl">
       <div className="animate-pulse overflow-hidden bg-white shadow sm:rounded-lg">
         <div className="px-4 py-6 sm:px-6">
           <div className="h-6 w-full rounded-md bg-gray-200"></div>{" "}

@@ -46,13 +46,6 @@ function ChatComponent() {
 
   return (
     <div>
-      {data?.role === "admin" ? (
-        <div className="bg-white text-center font-medium">
-          Sebastian from JobFair
-        </div>
-      ) : (
-        <div>you</div>
-      )}
       <Session
         appId="tKpCN1ok"
         userId={userId}
@@ -61,7 +54,6 @@ function ChatComponent() {
         <Chatbox
           conversationId="sample_conversation"
           style={{ width: "100%", height: "500px" }}
-          showChatHeader={false}
         ></Chatbox>
       </Session>
     </div>

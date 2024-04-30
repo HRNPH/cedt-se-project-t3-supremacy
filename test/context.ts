@@ -1,16 +1,13 @@
-import { PrismaClient } from '@prisma/client'
-import { mockDeep, DeepMockProxy } from 'jest-mock-extended'
+/* eslint-disable */
+import "@testing-library/jest-dom";
 
-export type Context = {
-  prisma: PrismaClient
-}
+// mock Database
+import { mockDeep, mockReset } from "jest-mock-extended";
+import { PrismaClient } from "@prisma/client";
 
-export type MockContext = {
-  prisma: DeepMockProxy<PrismaClient>
-}
+beforeEach(() => {
+  mockReset(prismaMock);
+});
 
-export const createMockContext = (): MockContext => {
-  return {
-    prisma: mockDeep<PrismaClient>(),
-  }
-}
+const prismaMock = mockDeep<PrismaClient>();
+export default prismaMock;

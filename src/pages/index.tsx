@@ -72,8 +72,9 @@ export default function Home() {
           role="list"
           className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {!isLoading
-            ? filterableData.map((company) => (
+          {!isLoading ? (
+            filterableData.length > 0 ? (
+              filterableData.map((company) => (
                 <CompanyCard
                   key={company.id}
                   {...company}
@@ -82,10 +83,16 @@ export default function Home() {
                   }
                 />
               ))
-            : Array.from({ length: 6 }).map((_, index) => (
-                <CompanyCardSkeleton key={index} />
-              ))}
+            ) : (
+              <li>No data available</li>
+            )
+          ) : (
+            Array.from({ length: 6 }).map((_, index) => (
+              <CompanyCardSkeleton key={index} />
+            ))
+          )}
         </ul>
+
         <div className="mt-20 rounded-xl bg-gray-50 p-10">
           <h2 className="text-2xl font-semibold tracking-tight text-gray-900">
             Unlock Your Career Potential
